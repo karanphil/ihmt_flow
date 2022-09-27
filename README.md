@@ -44,6 +44,7 @@ Requirements
 Singularity
 -----------
 If you are on Linux, we recommend using the Singularity to run ihmt_flow pipeline.
+To download singularity : https://scil.usherbrooke.ca/pages/containers/
 
 Launch your Nextflow command with: `-with-singularity ABSOLUTE_PATH/scilus_1.3.0.sif`
 
