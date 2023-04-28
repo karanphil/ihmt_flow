@@ -14,28 +14,30 @@ DESCRIPTION
 --input=/path/to/[root]     Root folder contaning one or multiple subject(s)
                             [root]
                             ├── S1
-                            │   ├── echo*altpn_ihmt.nii.gz/.json
-                            │   ├── echo*altnp_ihmt.nii.gz/.json
-                            │   ├── echo*mtoff_ihmt.nii.gz/.json
-                            │   ├── echo*neg_ihmt.nii.gz/.json
-                            │   ├── echo*pos_ihmt.nii.gz/.json
-                            │   ├── echo*T1w_ihmt.nii.gz/.json
+                            │   ├── *echo*altpn_ihmt.nii.gz/.json
+                            │   ├── *echo*altnp_ihmt.nii.gz/.json
+                            │   ├── *echo*mtoff_ihmt.nii.gz/.json
+                            │   ├── *echo*neg_ihmt.nii.gz/.json
+                            │   ├── *echo*pos_ihmt.nii.gz/.json
+                            │   ├── *echo*T1w_ihmt.nii.gz/.json
                             │   ├── ref.nii.gz (This is a copy of echo-1_acq-pos_ihmt)
                             │   ├── t1_brain_on_b0.nii.gz
                             │   ├── *b1.nii.gz (optional)
                             └── S2
-                                ├── echo*altpn_ihmt.nii.gz/.json
-                                ├── echo*altnp_ihmt.nii.gz/.json
-                                ├── echo*mtoff_ihmt.nii.gz/.json
-                                ├── echo*neg_ihmt.nii.gz/.json
-                                ├── echo*pos_ihmt.nii.gz/.json
-                                ├── echo*T1w_ihmt.nii.gz/.json
+                                ├── *echo*altpn_ihmt.nii.gz/.json
+                                ├── *echo*altnp_ihmt.nii.gz/.json
+                                ├── *echo*mtoff_ihmt.nii.gz/.json
+                                ├── *echo*neg_ihmt.nii.gz/.json
+                                ├── *echo*pos_ihmt.nii.gz/.json
+                                ├── *echo*T1w_ihmt.nii.gz/.json
                                 ├── ref.nii.gz (This is a copy of echo-1_acq-pos_ihmt)
                                 ├── t1_brain_on_b0.nii.gz
                                 └── *b1.nii.gz (optional)
 
+
 Files should come out of the Tractoflow pipeline, with the following source:
 - t1_brain_on_b0.nii.gz: from Register_T1
+
 
 OPTIONAL ARGUMENTS (default value)
 
