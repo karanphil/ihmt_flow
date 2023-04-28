@@ -15,7 +15,67 @@ Input Data recommendation:
   - ANTs can be used for the registration steps (http://stnava.github.io/ANTs/)
 
 
-References:
+A full description is available in this reference: https://onlinelibrary.wiley.com/doi/10.1002/hbm.26310. 
+The supplementary data provide the ihMT maps computations in more detail. 
+
+
+
+Requirements
+------------
+
+- [Nextflow](https://www.nextflow.io)
+- [scilpy](https://github.com/scilus/scilpy)
+- [ants](https://github.com/ANTsX/ANTs)
+
+
+
+Singularity
+-----------
+
+If you are on Linux, we recommend using the Singularity container to run ihMT_flow
+
+Prebuild Singularity images are available here:
+
+[https://scil.usherbrooke.ca/pages/containers/](https://scil.usherbrooke.ca/pages/containers/)
+
+FOR DEVELOPERS: The containers repository is available here:
+[containers-scilus](https://github.com/scilus/containers-scilus)
+
+
+
+Steps
+-----
+
+- Coregistration of images (ANTs)
+- Brain extraction (FSL bet)
+- Segmentation (ANTs)
+- Compute ihMT maps (Scilpy)
+- Registration to diffusion space using Register T1 of Tractoflow (ANTs)
+
+
+
+Output
+------
+
+- ihMT dR1 saturation (ihMTsat)
+- ihMT ratio (ihMTR)
+- MT saturation (MTsat)
+- MT Ratio (MTR)
+
+Myelin-sensitive maps in native space: Contrasts_ihMT_maps and ihMT_native_maps folders
+Myelin-sensitive maps in diffusion space: Register_contrast_maps and Register_ihMT_maps folders
+
+
+
+Usage
+-----
+
+See *USAGE* or run `nextflow run main.nf --help`
+
+
+
+References
+----------
 
 ```
 Varma G, Girard OM, Prevost VH, Grant AK, Duhamel G, Alsop DC.
@@ -33,23 +93,3 @@ and T1 relaxation obtained from 3D FLASH MRI. Magnetic Resonance in Medicine.
 2008;60(6):1396-407.
 """
 ```
-
-Requirements
-------------
-
-- [Nextflow](https://www.nextflow.io)
-- [scilpy](https://github.com/scilus/scilpy)
-- [ants](https://github.com/ANTsX/ANTs)
-
-Singularity
------------
-If you are on Linux, we recommend using the Singularity to run ihmt_flow pipeline.
-To download singularity : https://scil.usherbrooke.ca/pages/containers/
-
-Launch your Nextflow command with: `-with-singularity ABSOLUTE_PATH/scilus_1.3.0.sif`
-
-
-Usage
------
-
-See *USAGE* or run `nextflow run main.nf --help`
