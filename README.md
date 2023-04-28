@@ -62,8 +62,9 @@ Output
 - MT saturation (MTsat)
 - MT Ratio (MTR)
 
-Myelin-sensitive maps in native space: Contrasts_ihMT_maps and ihMT_native_maps folders
-Myelin-sensitive maps in diffusion space: Register_contrast_maps and Register_ihMT_maps folders
+Myelin-sensitive maps in native space: Contrasts_ihMT_maps and ihMT_native_maps folders.
+
+Myelin-sensitive maps in diffusion space: Register_contrast_maps and Register_ihMT_maps folders.
 
 
 
