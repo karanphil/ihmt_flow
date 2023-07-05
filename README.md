@@ -66,13 +66,13 @@ Myelin-sensitive maps in native space: Contrasts_ihMT_maps and ihMT_native_maps 
 
 Myelin-sensitive maps in diffusion space: Register_contrast_maps and Register_ihMT_maps folders.
 
-
+** Update for PK : 
+Include Contrast maps in Diffusion space as output.
 
 Usage
 -----
 
 See *USAGE* or run `nextflow run main.nf --help`
-
 
 
 References
