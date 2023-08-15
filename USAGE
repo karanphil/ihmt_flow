@@ -10,15 +10,15 @@ OUTPUT STRUCTURE
 Root output folder
     [root]
     ├── S1 (One folder per subject)
-    │   ├── Register_ihMT_maps - Quick Description
-    │   ├── Register_contrast_maps - Quick Description
-    │   ├── Register_T1w - Quick Description
-    │   ├── Contrasts_ihMT_maps (extended profile) - Quick Description
-    │   ├── ihMT_native_maps (extended profile) - Quick Description
-    │   ├── Segmentation (extended profile) - Quick Description
-    │   ├── Coregistered_images (extended profile) - Quick Description
-    │   ├── Bet_images (extended profile) - Quick Description
-    │   └── Registration_files (extended profile) - Quick Description
+    │   ├── Register_ihMT_maps - ihMT and MT ratio and saturation maps in diffusion space
+    │   ├── Register_contrast_maps - The 5 contrast images in diffusion space
+    │   ├── Register_T1w - The MT T1w in diffusion space: Used as reference for MT and ihMT saturation image processing
+    │   ├── Contrasts_ihMT_maps (extended profile) - The 5 contrast images and the MT T1w reference image in native space
+    │   ├── ihMT_native_maps (extended profile) - ihMT and MT ratio and saturation maps in native space
+    │   ├── Segmentation (extended profile) - Segmentation maps resulting from antsAtropos
+    │   ├── Coregistered_images (extended profile) - Coregistration of all images (echoes) on the reference image (echo-1_acq-pos_ihmt)
+    │   ├── Bet_images (extended profile) - All coregister images after brain extraction and brain mask
+    │   └── Registration_files (extended profile) - Transformation files resulting from ihMT image registration in diffusion space
     ├── S2
     │   ├── Register_ihMT_maps
 
