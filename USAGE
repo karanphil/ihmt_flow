@@ -59,10 +59,7 @@ Files should come out of the Tractoflow pipeline, with the following source:
 
 OPTIONAL ARGUMENTS (default value)
 
---ihmt_num_threads            # of threads to use for ihmt ($ihmt_num_threads)
+--ihmt_num_threads            Number of threads to use for ihmt ($ihmt_num_threads)
 --bet_T1w                     Fractional Intensity threshold for BET on T1weighted ihmt image ($bet_T1w).
---single_echo                 If set, it will use only one echo ($single_echo).
-                              By default, the script uses all the echoes available in the input folder.If you have
-                              or want to use the single echo option, the input folder should contain only one echo.
 --filtering                   If set, it will apply Gaussian filtering to remove Gibbs ringing ($filtering).
---extended                      If set, ihMT_flow will output multiple complementary data.
+--extended                    If set, ihMT_flow will output multiple complementary data ($extend). 

@@ -5,7 +5,6 @@ if(params.help) {
     bindings = [
         "ihmt_num_threads":"$params.ihmt_num_threads",
         "bet_T1w":"$params.bet_T1w",
-        "single_echo":"$params.single_echo",
         "filtering":"$params.filtering",
         "extended":"$params.extended"]
 
@@ -36,7 +35,14 @@ Channel
     .fromPath("$params.input/**/*ihmt.nii.gz", maxDepth: 1)
     .map { [it.parent.name, it] }
     .groupTuple()
-    .set{ ihmt_files_for_coregistration }
+    .into{ ihmt_files_for_coregistration; check_single_multi_echo }
+
+multi_echo = true
+check_single_multi_echo.map { it[1] }
+    .flatten()
+    .count()
+    .subscribe{a -> (a % 6 == 0)
+    multi_echo = false}
 
 Channel
     .fromPath("$params.input/**/*.json", maxDepth: 1)
@@ -100,14 +106,13 @@ process Compute_ihMT {
     file("Registration_files") optional true
 
     shell:
-    single_echo=params.single_echo ? '--single_echo ' : ''
     filtering=params.filtering ? '--filtering ' : ''
     b1_params=b1_count ? '--in_B1_map Bet_images/*b1*.nii.gz' : ''
     b1_ext=b1_count ? '_b1' : ''
     extended=params.extended ? 'true' : 'false'
 
-    '''
-    ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=!params.ihmt_num_threads
+    '''    
+    ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=!{params.ihmt_num_threads}
     
     mkdir Contrasts_ihMT_maps
     mkdir ihMT_native_maps
@@ -125,7 +130,7 @@ process Compute_ihMT {
     for image in !{ihmt_images}
     do
         basename=$(basename $image .nii.gz)
-        antsRegistrationSyN.sh -d 3 -n !params.ihmt_num_threads -t r -f !{ref} \
+        antsRegistrationSyN.sh -d 3 -n !{params.ihmt_num_threads} -t r -f !{ref} \
             -m $image -o Coregistered_images/${basename}
     done
 
@@ -179,11 +184,17 @@ process Compute_ihMT {
     scil_image_math.py convert Segmentation/!{sid}__concatenated_mask.nii.gz\
         Segmentation/!{sid}__concatenated_mask.nii.gz --data_type int8 -f
 
+    export single_echo="--single_echo"
+    if [[ !{multi_echo} == true ]]
+    then
+        export single_echo=""
+    fi
+
     scil_compute_ihMT_maps.py . Segmentation/!{sid}__concatenated_mask.nii.gz\
         --in_altnp Bet_images/*altnp*.nii.gz --in_altpn Bet_images/*altpn*.nii.gz\
         --in_mtoff Bet_images/*mtoff*.nii.gz --in_negative Bet_images/*neg*.nii.gz\
         --in_positive Bet_images/*pos*.nii.gz --in_t1w Bet_images/*T1w*.nii.gz\
-        --out_prefix !{sid}_ !{single_echo} !{filtering} !{b1_params}
+        --out_prefix !{sid}_ ${single_echo} !{filtering} !{b1_params}
 
     base_name_mt=$(basename ihMT_native_maps/*_MTsat*)
 
