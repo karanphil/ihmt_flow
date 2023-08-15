@@ -5,6 +5,24 @@ Pipeline for myelin indices maps from the Magnetization Transfer
 (MT) and inhomogeneous Magnetization Transfer (ihMT).
 Resulting maps could be corrected or not for an empiric B1 correction maps.
 
+OUTPUT STRUCTURE
+
+Root output folder
+    [root]
+    ├── S1 (One folder per subject)
+    │   ├── Register_ihMT_maps - Quick Description
+    │   ├── Register_contrast_maps - Quick Description
+    │   ├── Register_T1w - Quick Description
+    │   ├── Contrasts_ihMT_maps (extended profile) - Quick Description
+    │   ├── ihMT_native_maps (extended profile) - Quick Description
+    │   ├── Segmentation (extended profile) - Quick Description
+    │   ├── Coregistered_images (extended profile) - Quick Description
+    │   ├── Bet_images (extended profile) - Quick Description
+    │   └── Registration_files (extended profile) - Quick Description
+    ├── S2
+    │   ├── Register_ihMT_maps
+
+
 USAGE
 
 nextflow run main.nf [optional_args] (--input)
@@ -47,3 +65,4 @@ OPTIONAL ARGUMENTS (default value)
                               By default, the script uses all the echoes available in the input folder.If you have
                               or want to use the single echo option, the input folder should contain only one echo.
 --filtering                   If set, it will apply Gaussian filtering to remove Gibbs ringing ($filtering).
+--extended                      If set, ihMT_flow will output multiple complementary data.
