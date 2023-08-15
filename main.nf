@@ -37,13 +37,6 @@ Channel
     .groupTuple()
     .into{ ihmt_files_for_coregistration; check_single_multi_echo }
 
-multi_echo = true
-check_single_multi_echo.map { it[1] }
-    .flatten()
-    .count()
-    .subscribe{a -> (a % 6 == 0)
-    multi_echo = false}
-
 Channel
     .fromPath("$params.input/**/*.json", maxDepth: 1)
     .map { [it.parent.name, it] }
@@ -70,7 +63,7 @@ ihmt_ref_for_coregister
     .set{ ihmt_ref_b1_for_coregister }
 
 check_b1.count().set{ b1_counter }
-ihmt_ref_for_count.count().set{number_subj_for_compare}
+ihmt_ref_for_count.count().into{number_subj_for_compare; number_of_subj_for_echo}
 
 number_subj_for_compare
     .concat(b1_counter)
@@ -78,6 +71,15 @@ number_subj_for_compare
     .subscribe{a, b -> if (a != b && b > 0)
     error "Error ~ Some subjects have a b1 image and others don't.\n" +
           "Please be sure to have the same acquisitions for all subjects."}
+
+multi_echo = true
+check_single_multi_echo.map { it[1] }
+    .flatten()
+    .count()
+    .concat(number_of_subj_for_echo)
+    .toList()
+    .subscribe{a, b -> if (a % 6 == 0 && b * 6 == a)
+    multi_echo = false}
 
 number_subj_for_compare
     .concat(b1_counter)
@@ -112,6 +114,7 @@ process Compute_ihMT {
     extended=params.extended ? 'true' : 'false'
 
     '''    
+    echo !{multi_echo}
     ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=!{params.ihmt_num_threads}
     
     mkdir Contrasts_ihMT_maps
