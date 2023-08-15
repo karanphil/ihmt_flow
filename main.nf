@@ -35,7 +35,7 @@ Channel
     .fromPath("$params.input/**/*ihmt.nii.gz", maxDepth: 1)
     .map { [it.parent.name, it] }
     .groupTuple()
-    .into{ ihmt_files_for_coregistration; check_single_multi_echo }
+    .into{ ihmt_files_for_coregistration; check_single_multi_echo; check_mix }
 
 Channel
     .fromPath("$params.input/**/*.json", maxDepth: 1)
@@ -80,6 +80,13 @@ check_single_multi_echo.map { it[1] }
     .toList()
     .subscribe{a, b -> if (a % 6 == 0 && b * 6 == a)
     multi_echo = false}
+
+check_mix.map { it[1].size() }
+    .unique()
+    .toList()
+    .subscribe{ List a -> if (a.size() > 1)
+    error "Error ~ Some subjects have a multi-echo acquisitions and others don't.\n" +
+          "Please be sure to have the same acquisitions for all subjects."}
 
 number_subj_for_compare
     .concat(b1_counter)
