@@ -98,7 +98,7 @@ process Compute_ihMT {
     output:
     file("Register_ihMT_maps")
     file("Register_contrast_maps")
-    file("Register_T1w")
+    file("Register_MT_T1w")
 
     file("Contrasts_ihMT_maps") optional true
     file("ihMT_native_maps") optional true
@@ -126,7 +126,7 @@ process Compute_ihMT {
 
     mkdir Register_ihMT_maps
     mkdir Register_contrast_maps
-    mkdir Register_T1w
+    mkdir Register_MT_T1w
     
     mv !{ihmt_json} Bet_images
 
@@ -265,7 +265,7 @@ process Compute_ihMT {
 
    antsApplyTransforms -d 3 -i Contrasts_ihMT_maps/*T1w*.nii.gz\
       -r !{sid}__MTsat!{b1_ext}_warped.nii.gz \
-      -o Register_T1w/!{sid}__T1w!{b1_ext}_warped.nii.gz -n Linear \
+      -o Register_MT_T1w/!{sid}__T1w!{b1_ext}_warped.nii.gz -n Linear \
       -t !{sid}__output1Warp.nii.gz !{sid}__output0GenericAffine.mat
 
 
