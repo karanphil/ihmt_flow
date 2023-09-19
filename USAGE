@@ -32,22 +32,22 @@ DESCRIPTION
 --input=/path/to/[root]     Root folder contaning one or multiple subject(s)
                             [root]
                             ├── S1
-                            │   ├── *echo*altpn_ihmt.nii.gz/.json
-                            │   ├── *echo*altnp_ihmt.nii.gz/.json
-                            │   ├── *echo*mtoff_ihmt.nii.gz/.json
-                            │   ├── *echo*neg_ihmt.nii.gz/.json
-                            │   ├── *echo*pos_ihmt.nii.gz/.json
-                            │   ├── *echo*T1w_ihmt.nii.gz/.json
+                            │   ├── *echo-*_acq-altpn_ihmt.nii.gz/.json
+                            │   ├── *echo-*_acq-altnp_ihmt.nii.gz/.json
+                            │   ├── *echo-*_acq-mtoff_ihmt.nii.gz/.json
+                            │   ├── *echo-*_acq-neg_ihmt.nii.gz/.json
+                            │   ├── *echo-*_acq-pos_ihmt.nii.gz/.json
+                            │   ├── *echo-*_acq-T1w_ihmt.nii.gz/.json
                             │   ├── ref.nii.gz (This is a copy of echo-1_acq-pos_ihmt)
                             │   ├── t1_brain_on_b0.nii.gz
                             │   ├── *b1.nii.gz (optional)
                             └── S2
-                                ├── *echo*altpn_ihmt.nii.gz/.json
-                                ├── *echo*altnp_ihmt.nii.gz/.json
-                                ├── *echo*mtoff_ihmt.nii.gz/.json
-                                ├── *echo*neg_ihmt.nii.gz/.json
-                                ├── *echo*pos_ihmt.nii.gz/.json
-                                ├── *echo*T1w_ihmt.nii.gz/.json
+                                ├── *echo-*_acq-altpn_ihmt.nii.gz/.json
+                                ├── *echo-*_acq-altnp_ihmt.nii.gz/.json
+                                ├── *echo-*_acq-mtoff_ihmt.nii.gz/.json
+                                ├── *echo-*_acq-neg_ihmt.nii.gz/.json
+                                ├── *echo-*_acq-pos_ihmt.nii.gz/.json
+                                ├── *echo-*_acq-T1w_ihmt.nii.gz/.json
                                 ├── ref.nii.gz (This is a copy of echo-1_acq-pos_ihmt)
                                 ├── t1_brain_on_b0.nii.gz
                                 └── *b1.nii.gz (optional)
