@@ -149,7 +149,7 @@ process Compute_ihMT {
         base_name_b1=$(basename !{b1} .nii.gz)
         antsApplyTransforms -d 3 -i !{b1} -r !{ref}\
             -t Coregistered_images/*echo-1_acq-T1w_ihmt0GenericAffine.mat\
-            -o Coregistered_images/${base_name_b1}Warped.nii.gz -v
+            -o Coregistered_images/${base_name_b1}Warped.nii.gz -n Linear -v
     fi
 
     bet Coregistered_images/*echo-1_acq-T1w_ihmtWarped.nii.gz\
