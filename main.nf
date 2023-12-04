@@ -204,7 +204,7 @@ process Compute_ihMT {
         --in_altnp Bet_images/*altnp*.nii.gz --in_altpn Bet_images/*altpn*.nii.gz\
         --in_mtoff Bet_images/*mtoff*.nii.gz --in_negative Bet_images/*neg*.nii.gz\
         --in_positive Bet_images/*pos*.nii.gz --in_t1w Bet_images/*T1w*.nii.gz\
-        --out_prefix !{sid}_ ${single_echo} !{filtering} !{b1_params}
+        --out_prefix !{sid}_ ${single_echo} !{filtering}
 
     base_name_mt=$(basename ihMT_native_maps/*_MTsat*)
 
@@ -274,6 +274,14 @@ process Compute_ihMT {
       -r !{sid}__MTsat!{b1_ext}_warped.nii.gz \
       -o Register_MT_T1w/!{sid}__T1w!{b1_ext}_warped.nii.gz -n Linear \
       -t !{sid}__output1Warp.nii.gz !{sid}__output0GenericAffine.mat
+
+    if [[ !{b1_count} != 0 ]]
+    then
+        antsApplyTransforms -d 3 -i Bet_images/*b1*.nii.gz\
+            -r !{sid}__MTsat!{b1_ext}_warped.nii.gz \
+            -o Register_contrast_maps/!{sid}_!{b1_ext}_warped.nii.gz -n Linear \
+            -t !{sid}__output1Warp.nii.gz !{sid}__output0GenericAffine.mat
+    fi
 
 
     mv !{sid}__MTsat!{b1_ext}_warped.nii.gz Register_ihMT_maps/
