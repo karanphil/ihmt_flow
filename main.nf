@@ -69,7 +69,11 @@ Channel
     .fromPath("$params.input/**/fitValues*.mat", maxDepth: 1)
     .map { [it.parent.name, it] }
     .groupTuple()
-    .set{ b1_fitvalues }
+    .into{ b1_fitvalues }
+
+ihmt_ref_b1_for_coregister
+    .join(b1_fitvalues)
+    .set{ ihmt_ref_b1_for_coregister }
 
 number_subj_for_compare
     .concat(b1_counter)
@@ -105,8 +109,7 @@ process Compute_ihMT {
 
     input:
     set sid, file(ihmt_images), file(ihmt_json), file(ref),
-        file(t1_on_b0), file(b1) from ihmt_ref_b1_for_coregister,
-        file(fitvalues) from b1_fitvalues
+        file(t1_on_b0), file(b1), file(fitvalues) from ihmt_ref_b1_for_coregister
     val(b1_count) from b1_counter
 
     output:
