@@ -69,7 +69,7 @@ Channel
     .fromPath("$params.input/**/fitValues*.mat", maxDepth: 1)
     .map { [it.parent.name, it] }
     .groupTuple()
-    .into{ b1_fitvalues }
+    .set{ b1_fitvalues }
 
 number_subj_for_compare
     .concat(b1_counter)
@@ -104,8 +104,9 @@ process Compute_ihMT {
     cpus params.ihmt_num_threads
 
     input:
-    set sid, file(ihmt_images), file(ihmt_json), file(ref), file(b1_fitvalues)
-        file(t1_on_b0), file(b1) from ihmt_ref_b1_for_coregister
+    set sid, file(ihmt_images), file(ihmt_json), file(ref)
+        file(t1_on_b0), file(b1) from ihmt_ref_b1_for_coregister,
+        file(fitvalues) from b1_fitvalues
     val(b1_count) from b1_counter
 
     output:
@@ -146,7 +147,7 @@ process Compute_ihMT {
     mv !{ihmt_json} Bet_images
 
     mkdir B1_fitValues
-    mv !{b1_fitvalues} B1_fitValues
+    mv !{fitvalues} B1_fitValues
 
     for image in !{ihmt_images}
     do
