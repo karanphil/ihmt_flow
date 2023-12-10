@@ -65,6 +65,12 @@ ihmt_ref_for_coregister
 check_b1.count().set{ b1_counter }
 ihmt_ref_for_count.count().into{number_subj_for_compare; number_of_subj_for_echo}
 
+Channel
+    .fromPath("$params.input/**/fitValues*.mat", maxDepth: 1)
+    .map { [it.parent.name, it] }
+    .groupTuple()
+    .into{ b1_fitvalues }
+
 number_subj_for_compare
     .concat(b1_counter)
     .toList()
@@ -116,7 +122,9 @@ process Compute_ihMT {
 
     shell:
     filtering=params.filtering ? '--filtering ' : ''
-    b1_params=b1_count ? '--in_B1_map Bet_images/*b1*.nii.gz' : ''
+    b1_input_params=b1_count ? '--in_B1_map Bet_images/*b1*.nii.gz' : ''
+    b1_method_params=b1_count ? '--B1_correction_method model_based' : ''
+    b1_fitvalues_params=b1_count ? '--in_B1_fitvalues B1_fitValues/fitValues_SP_1.mat B1_fitValues/fitValues_SN_1.mat B1_fitValues/fitValues_D_1.mat ' : ''
     b1_ext=b1_count ? '_b1' : ''
     extended=params.extended ? 'true' : 'false'
 
@@ -136,6 +144,9 @@ process Compute_ihMT {
     mkdir Register_MT_T1w
     
     mv !{ihmt_json} Bet_images
+
+    mkdir B1_fitValues
+    mv !{b1_fitvalues} B1_fitValues
 
     for image in !{ihmt_images}
     do
@@ -204,7 +215,8 @@ process Compute_ihMT {
         --in_altnp Bet_images/*altnp*.nii.gz --in_altpn Bet_images/*altpn*.nii.gz\
         --in_mtoff Bet_images/*mtoff*.nii.gz --in_negative Bet_images/*neg*.nii.gz\
         --in_positive Bet_images/*pos*.nii.gz --in_t1w Bet_images/*T1w*.nii.gz\
-        --out_prefix !{sid}_ ${single_echo} !{filtering}
+        --out_prefix !{sid}_ ${single_echo} !{filtering} !{b1_input_params}\
+        !{b1_method_params} !{b1_fitvalues_params}
 
     base_name_mt=$(basename ihMT_native_maps/*_MTsat*)
 
