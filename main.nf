@@ -104,7 +104,7 @@ process Compute_ihMT {
     cpus params.ihmt_num_threads
 
     input:
-    set sid, file(ihmt_images), file(ihmt_json), file(ref)
+    set sid, file(ihmt_images), file(ihmt_json), file(ref),
         file(t1_on_b0), file(b1) from ihmt_ref_b1_for_coregister,
         file(fitvalues) from b1_fitvalues
     val(b1_count) from b1_counter
