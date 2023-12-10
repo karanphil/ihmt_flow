@@ -69,7 +69,7 @@ Channel
     .fromPath("$params.input/**/fitValues*.mat", maxDepth: 1)
     .map { [it.parent.name, it] }
     .groupTuple()
-    .into{ b1_fitvalues }
+    .set{ b1_fitvalues }
 
 ihmt_ref_b1_for_coregister
     .join(b1_fitvalues)
