@@ -58,22 +58,19 @@ Channel
     .groupTuple()
     .into{ b1_for_ihmt;check_b1}
 
-ihmt_ref_for_coregister
-    .join(b1_for_ihmt, remainder:true)
-    .set{ ihmt_ref_b1_for_coregister }
-
-check_b1.count().set{ b1_counter }
-ihmt_ref_for_count.count().into{number_subj_for_compare; number_of_subj_for_echo}
-
 Channel
     .fromPath("$params.input/**/fitValues*.mat", maxDepth: 1)
     .map { [it.parent.name, it] }
     .groupTuple()
     .set{ b1_fitvalues }
 
-ihmt_ref_b1_for_coregister
+ihmt_ref_for_coregister
+    .join(b1_for_ihmt, remainder:true)
     .join(b1_fitvalues)
     .set{ ihmt_ref_b1_for_coregister }
+
+check_b1.count().set{ b1_counter }
+ihmt_ref_for_count.count().into{number_subj_for_compare; number_of_subj_for_echo}
 
 number_subj_for_compare
     .concat(b1_counter)
