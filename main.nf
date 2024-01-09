@@ -102,10 +102,9 @@ process Compute_ihMT {
 
     output:
     file("Register_ihMT_maps")
-    file("Register_contrast_maps")
-    file("Register_MT_T1w")
+    file("Register_complementary_maps")
 
-    file("Contrasts_ihMT_maps") optional true
+    file("Complementary_maps") optional true
     file("ihMT_native_maps") optional true
     file("Segmentation") optional true
     file("Coregistered_images") optional true
@@ -123,7 +122,7 @@ process Compute_ihMT {
     '''
     ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=!{params.ihmt_num_threads}
     
-    mkdir Contrasts_ihMT_maps
+    mkdir Complementary_maps
     mkdir ihMT_native_maps
     mkdir Segmentation
     mkdir Coregistered_images
@@ -131,8 +130,7 @@ process Compute_ihMT {
     mkdir Registration_files
 
     mkdir Register_ihMT_maps
-    mkdir Register_contrast_maps
-    mkdir Register_MT_T1w
+    mkdir Register_complementary_maps
     
     mv !{ihmt_json} Bet_images
 
@@ -243,41 +241,66 @@ process Compute_ihMT {
         -o Register_ihMT_maps/!{sid}__ihMTsat!{b1_ext}_warped.nii.gz -n Linear \
         -t !{sid}__output1Warp.nii.gz !{sid}__output0GenericAffine.mat
 
-    antsApplyTransforms -d 3 -i Contrasts_ihMT_maps/*_positive*.nii.gz\
+    antsApplyTransforms -d 3 -i Complementary_maps/*_positive*.nii.gz\
         -r !{sid}__MTsat!{b1_ext}_warped.nii.gz \
-        -o Register_contrast_maps/!{sid}__positive!{b1_ext}_warped.nii.gz -n Linear \
+        -o Register_complementary_maps/!{sid}__positive!{b1_ext}_warped.nii.gz -n Linear \
         -t !{sid}__output1Warp.nii.gz !{sid}__output0GenericAffine.mat
 
-    antsApplyTransforms -d 3 -i Contrasts_ihMT_maps/*negative*.nii.gz\
+    antsApplyTransforms -d 3 -i Complementary_maps/*negative*.nii.gz\
         -r !{sid}__MTsat!{b1_ext}_warped.nii.gz \
-        -o Register_contrast_maps/!{sid}__negative!{b1_ext}_warped.nii.gz -n Linear \
+        -o Register_complementary_maps/!{sid}__negative!{b1_ext}_warped.nii.gz -n Linear \
         -t !{sid}__output1Warp.nii.gz !{sid}__output0GenericAffine.mat
 
-    antsApplyTransforms -d 3 -i Contrasts_ihMT_maps/*altnp*.nii.gz\
+    antsApplyTransforms -d 3 -i Complementary_maps/*altnp*.nii.gz\
         -r !{sid}__MTsat!{b1_ext}_warped.nii.gz \
-        -o Register_contrast_maps/!{sid}__altnp!{b1_ext}_warped.nii.gz -n Linear \
+        -o Register_complementary_maps/!{sid}__altnp!{b1_ext}_warped.nii.gz -n Linear \
         -t !{sid}__output1Warp.nii.gz !{sid}__output0GenericAffine.mat
 
-    antsApplyTransforms -d 3 -i Contrasts_ihMT_maps/*altpn*.nii.gz\
+    antsApplyTransforms -d 3 -i Complementary_maps/*altpn*.nii.gz\
        -r !{sid}__MTsat!{b1_ext}_warped.nii.gz \
-       -o Register_contrast_maps/!{sid}__altpn!{b1_ext}_warped.nii.gz -n Linear \
+       -o Register_complementary_maps/!{sid}__altpn!{b1_ext}_warped.nii.gz -n Linear \
        -t !{sid}__output1Warp.nii.gz !{sid}__output0GenericAffine.mat
 
-    antsApplyTransforms -d 3 -i Contrasts_ihMT_maps/*reference*.nii.gz\
+    antsApplyTransforms -d 3 -i Complementary_maps/*mtoff_PD*.nii.gz\
        -r !{sid}__MTsat!{b1_ext}_warped.nii.gz \
-       -o Register_contrast_maps/!{sid}__reference!{b1_ext}_warped.nii.gz -n Linear \
+       -o Register_complementary_maps/!{sid}__mtoff_PD!{b1_ext}_warped.nii.gz -n Linear \
        -t !{sid}__output1Warp.nii.gz !{sid}__output0GenericAffine.mat
 
-   antsApplyTransforms -d 3 -i Contrasts_ihMT_maps/*T1w*.nii.gz\
+   antsApplyTransforms -d 3 -i Complementary_maps/*mtoff_T1*.nii.gz\
       -r !{sid}__MTsat!{b1_ext}_warped.nii.gz \
-      -o Register_MT_T1w/!{sid}__T1w!{b1_ext}_warped.nii.gz -n Linear \
+      -o Register_complementary_maps/!{sid}__mtoff_T1!{b1_ext}_warped.nii.gz -n Linear \
       -t !{sid}__output1Warp.nii.gz !{sid}__output0GenericAffine.mat
 
     if [[ !{b1_count} != 0 ]]
     then
         antsApplyTransforms -d 3 -i Bet_images/*b1*.nii.gz\
             -r !{sid}__MTsat!{b1_ext}_warped.nii.gz \
-            -o Register_contrast_maps/!{sid}_!{b1_ext}_warped.nii.gz -n Linear \
+            -o Register_complementary_maps/!{sid}_original!{b1_ext}_warped.nii.gz -n Linear \
+            -t !{sid}__output1Warp.nii.gz !{sid}__output0GenericAffine.mat
+
+        antsApplyTransforms -d 3 -i Complementary_maps/*B1_map*.nii.gz\
+            -r !{sid}__MTsat!{b1_ext}_warped.nii.gz \
+            -o Register_complementary_maps/!{sid}__!{b1_ext}_warped.nii.gz -n Linear \
+            -t !{sid}__output1Warp.nii.gz !{sid}__output0GenericAffine.mat
+
+        antsApplyTransforms -d 3 -i Complementary_maps/*MTsat_d*.nii.gz\
+            -r !{sid}__MTsat!{b1_ext}_warped.nii.gz \
+            -o Register_complementary_maps/!{sid}__MTsat_d!{b1_ext}_warped.nii.gz -n Linear \
+            -t !{sid}__output1Warp.nii.gz !{sid}__output0GenericAffine.mat
+
+        antsApplyTransforms -d 3 -i Complementary_maps/*MTsat_sn*.nii.gz\
+            -r !{sid}__MTsat!{b1_ext}_warped.nii.gz \
+            -o Register_complementary_maps/!{sid}__MTsat_sn!{b1_ext}_warped.nii.gz -n Linear \
+            -t !{sid}__output1Warp.nii.gz !{sid}__output0GenericAffine.mat
+
+        antsApplyTransforms -d 3 -i Complementary_maps/*MTsat_sp*.nii.gz\
+            -r !{sid}__MTsat!{b1_ext}_warped.nii.gz \
+            -o Register_complementary_maps/!{sid}__MTsat_sp!{b1_ext}_warped.nii.gz -n Linear \
+            -t !{sid}__output1Warp.nii.gz !{sid}__output0GenericAffine.mat
+
+        antsApplyTransforms -d 3 -i Complementary_maps/*R1app*.nii.gz\
+            -r !{sid}__MTsat!{b1_ext}_warped.nii.gz \
+            -o Register_complementary_maps/!{sid}__R1app!{b1_ext}_warped.nii.gz -n Linear \
             -t !{sid}__output1Warp.nii.gz !{sid}__output0GenericAffine.mat
     fi
 
@@ -288,7 +311,7 @@ process Compute_ihMT {
 
     if [[ !{extended} == "false" ]]
     then
-    mv Contrasts_ihMT_maps Contrasts_ihMT_maps_tmp 
+    mv Complementary_maps Complementary_maps_tmp 
     mv ihMT_native_maps ihMT_native_maps_tmp
     mv Segmentation Segmentation_tmp
     mv Coregistered_images Coregistered_images_tmp
