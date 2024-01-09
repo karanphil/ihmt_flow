@@ -35,7 +35,7 @@ Channel
     .fromPath("$params.input/**/*ihmt.nii.gz", maxDepth: 1)
     .map { [it.parent.name, it] }
     .groupTuple()
-    .into{ ihmt_files_for_coregistration; check_single_multi_echo; check_mix }
+    .into{ ihmt_files_for_coregistration; check_mix }
 
 Channel
     .fromPath("$params.input/**/*.json", maxDepth: 1)
@@ -79,15 +79,6 @@ number_subj_for_compare
     error "Error ~ Some subjects have a b1 image and others don't.\n" +
           "Please be sure to have the same acquisitions for all subjects."}
 
-multi_echo = true
-check_single_multi_echo.map { it[1] }
-    .flatten()
-    .count()
-    .concat(number_of_subj_for_echo)
-    .toList()
-    .subscribe{a, b -> if (a % 6 == 0 && b * 6 == a)
-    multi_echo = false}
-
 check_mix.map { it[1].size() }
     .unique()
     .toList()
@@ -125,12 +116,11 @@ process Compute_ihMT {
     filtering=params.filtering ? '--filtering ' : ''
     b1_input_params=b1_count ? '--in_B1_map Bet_images/*b1*.nii.gz' : ''
     b1_method_params=b1_count ? '--B1_correction_method model_based' : ''
-    b1_fitvalues_params=b1_count ? '--in_B1_fitvalues B1_fitValues/fitValues_SP_1.mat B1_fitValues/fitValues_SN_1.mat B1_fitValues/fitValues_D_1.mat ' : ''
+    b1_fitvalues_params=b1_count ? '--B1_fitvalues B1_fitValues/fitValues_SP_1.mat B1_fitValues/fitValues_SN_1.mat B1_fitValues/fitValues_D_1.mat ' : ''
     b1_ext=b1_count ? '_b1' : ''
     extended=params.extended ? 'true' : 'false'
 
-    '''    
-    echo !{multi_echo}
+    '''
     ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=!{params.ihmt_num_threads}
     
     mkdir Contrasts_ihMT_maps
@@ -203,20 +193,15 @@ process Compute_ihMT {
     ImageMath 3 Segmentation/!{sid}__concatenated_mask.nii.gz GE\
         Segmentation/!{sid}__concatenated_mask.nii.gz 1
 
-    scil_image_math.py convert Segmentation/!{sid}__concatenated_mask.nii.gz\
+    scil_volume_math.py convert Segmentation/!{sid}__concatenated_mask.nii.gz\
         Segmentation/!{sid}__concatenated_mask.nii.gz --data_type int8 -f
 
-    export single_echo="--single_echo"
-    if [[ !{multi_echo} == true ]]
-    then
-        export single_echo=""
-    fi
-
-    scil_compute_ihMT_maps.py . Segmentation/!{sid}__concatenated_mask.nii.gz\
+    scil_mti_maps_ihMT.py . --mask Segmentation/!{sid}__concatenated_mask.nii.gz\
         --in_altnp Bet_images/*altnp*.nii.gz --in_altpn Bet_images/*altpn*.nii.gz\
-        --in_mtoff Bet_images/*mtoff*.nii.gz --in_negative Bet_images/*neg*.nii.gz\
-        --in_positive Bet_images/*pos*.nii.gz --in_t1w Bet_images/*T1w*.nii.gz\
-        --out_prefix !{sid}_ ${single_echo} !{filtering} !{b1_input_params}\
+        --in_mtoff_pd Bet_images/*mtoff*.nii.gz --in_negative Bet_images/*neg*.nii.gz\
+        --in_positive Bet_images/*pos*.nii.gz --in_mtoff_t1 Bet_images/*T1w*.nii.gz\
+        --in_jsons Bet_images/*echo-1_acq-mtoff*.json Bet_images/*echo-1_acq-T1w*.json\
+        --out_prefix !{sid}_ !{filtering} --extended !{b1_input_params}\
         !{b1_method_params} !{b1_fitvalues_params}
 
     base_name_mt=$(basename ihMT_native_maps/*_MTsat*)
