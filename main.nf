@@ -283,24 +283,24 @@ process Compute_ihMT {
             -o Register_complementary_maps/!{sid}__!{b1_ext}_warped.nii.gz -n Linear \
             -t !{sid}__output1Warp.nii.gz !{sid}__output0GenericAffine.mat
 
-        antsApplyTransforms -d 3 -i Complementary_maps/*MTsat_d*.nii.gz\
+        antsApplyTransforms -d 3 -i Complementary_maps/*MTsat_dual*.nii.gz\
             -r !{sid}__MTsat!{b1_ext}_warped.nii.gz \
-            -o Register_complementary_maps/!{sid}__MTsat_d!{b1_ext}_warped.nii.gz -n Linear \
+            -o Register_complementary_maps/!{sid}__MTsat_dual!{b1_ext}_warped.nii.gz -n Linear \
             -t !{sid}__output1Warp.nii.gz !{sid}__output0GenericAffine.mat
 
-        antsApplyTransforms -d 3 -i Complementary_maps/*MTsat_sn*.nii.gz\
+        antsApplyTransforms -d 3 -i Complementary_maps/*MTsat_single_negative*.nii.gz\
             -r !{sid}__MTsat!{b1_ext}_warped.nii.gz \
-            -o Register_complementary_maps/!{sid}__MTsat_sn!{b1_ext}_warped.nii.gz -n Linear \
+            -o Register_complementary_maps/!{sid}__MTsat_single_negative!{b1_ext}_warped.nii.gz -n Linear \
             -t !{sid}__output1Warp.nii.gz !{sid}__output0GenericAffine.mat
 
-        antsApplyTransforms -d 3 -i Complementary_maps/*MTsat_sp*.nii.gz\
+        antsApplyTransforms -d 3 -i Complementary_maps/*MTsat_single_positive*.nii.gz\
             -r !{sid}__MTsat!{b1_ext}_warped.nii.gz \
-            -o Register_complementary_maps/!{sid}__MTsat_sp!{b1_ext}_warped.nii.gz -n Linear \
+            -o Register_complementary_maps/!{sid}__MTsat_single_positive!{b1_ext}_warped.nii.gz -n Linear \
             -t !{sid}__output1Warp.nii.gz !{sid}__output0GenericAffine.mat
 
-        antsApplyTransforms -d 3 -i Complementary_maps/*R1app*.nii.gz\
+        antsApplyTransforms -d 3 -i Complementary_maps/*apparent_R1*.nii.gz\
             -r !{sid}__MTsat!{b1_ext}_warped.nii.gz \
-            -o Register_complementary_maps/!{sid}__R1app!{b1_ext}_warped.nii.gz -n Linear \
+            -o Register_complementary_maps/!{sid}__apparent_R1!{b1_ext}_warped.nii.gz -n Linear \
             -t !{sid}__output1Warp.nii.gz !{sid}__output0GenericAffine.mat
     fi
 
